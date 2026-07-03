@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Island House — Resort Wear for the Long Way Home</title>
+    <meta
+      name="description"
+      content="Linen, silk, and easy cotton resort wear. Shop shirts, dresses, trousers, and accessories made for warm-weather life."
+    />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Island House — Resort Wear for the Long Way Home" />
+    <meta
+      property="og:description"
+      content="A Tommy Bahama website clone demonstrating Adobe Experience Platform (AEP) functionality."
+    />
+    <meta property="og:type" content="website" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Island House — Resort Wear for the Long Way Home" />
+    <meta
+      name="twitter:description"
+      content="A Tommy Bahama website clone demonstrating Adobe Experience Platform (AEP) functionality."
+    />
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <!-- Critical styles — load block CSS directly so it applies immediately -->
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/blocks/header/header.css" />
+    <link rel="stylesheet" href="/blocks/footer/footer.css" />
+    <link rel="stylesheet" href="/blocks/hero/hero.css" />
+    <link rel="stylesheet" href="/blocks/categories/categories.css" />
+    <link rel="stylesheet" href="/blocks/product-list/product-list.css" />
+    <link rel="stylesheet" href="/blocks/recommendations/recommendations.css" />
+    <!-- EDS bootstrap -->
+    <script type="module" src="/scripts/scripts.js"></script>
+  </head>
+  <body>
+    <header></header>
+
+    <main>
+      <!-- ── Hero ──────────────────────────────────────────────────────── -->
+      <div class="section section--no-pad">
+        <div class="hero"></div>
+      </div>
+
+      <!-- ── Story strip ───────────────────────────────────────────────── -->
+      <div class="section">
+        <div>
+          <div class="story-strip-wrap container-x max-w-site">
+            <div class="eyebrow story-eyebrow">Since a Tuesday in 2014</div>
+            <h2 class="story-heading">
+              A wardrobe cut for warm afternoons, salt air, and porch light dinners.
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Categories ────────────────────────────────────────────────── -->
+      <div class="section section--flush-top">
+        <div class="categories"></div>
+      </div>
+
+      <!-- ── Featured products ─────────────────────────────────────────── -->
+      <div class="section">
+        <div
+          class="product-list"
+          data-eyebrow="The Editor's Table"
+          data-heading="Just landed"
+          data-limit="4"
+          data-view-all="/category.html?category=women"
+        ></div>
+      </div>
+
+      <!-- ── AEP Recommendations slot ──────────────────────────────────── -->
+      <div class="section section--flush-top">
+        <div class="recommendations"></div>
+      </div>
+    </main>
+
+    <footer></footer>
+
+    <style>
+      .section--no-pad  { padding-block: 0; }
+      .section--flush-top { padding-top: 0; }
+
+      .story-strip-wrap {
+        text-align: center;
+      }
+      .story-eyebrow {
+        color: var(--coral);
+        margin-bottom: 1rem;
+      }
+      .story-heading {
+        font-family: var(--font-serif);
+        font-size: clamp(1.5rem, 4vw, 3rem);
+        max-width: 48rem;
+        margin-inline: auto;
+        color: var(--ocean);
+      }
+    </style>
+  </body>
+</html>

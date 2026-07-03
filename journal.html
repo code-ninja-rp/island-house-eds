@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Journal — Island House</title>
+    <meta
+      name="description"
+      content="Field notes, island guides, and dispatches from Island House."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/blocks/header/header.css" />
+    <link rel="stylesheet" href="/blocks/footer/footer.css" />
+    <script type="module" src="/scripts/scripts.js"></script>
+  </head>
+  <body>
+    <header></header>
+
+    <main>
+      <div class="section">
+        <div>
+          <div class="journal-wrap container-x max-w-site">
+          <!-- Header -->
+          <div class="journal-header">
+            <div class="eyebrow journal-eyebrow">The Journal</div>
+            <h1 class="journal-title">Field notes</h1>
+          </div>
+
+          <!-- Articles -->
+          <div class="journal-posts">
+            <article class="journal-article">
+              <div class="eyebrow journal-date">June 2026</div>
+              <h2 class="journal-post-title">A weekend in Vieques</h2>
+              <p class="journal-post-excerpt">
+                Sandy roads, wild horses, and the exact linen shirt you'll want for the crossing.
+              </p>
+            </article>
+
+            <article class="journal-article">
+              <div class="eyebrow journal-date">May 2026</div>
+              <h2 class="journal-post-title">How we cut a camp collar</h2>
+              <p class="journal-post-excerpt">
+                On patternmaking, drape, and the small mercies of a well-placed dart.
+              </p>
+            </article>
+
+            <article class="journal-article">
+              <div class="eyebrow journal-date">April 2026</div>
+              <h2 class="journal-post-title">The porch dinner rules</h2>
+              <p class="journal-post-excerpt">
+                Nine notes on hosting when the humidity is doing most of the work.
+              </p>
+            </article>
+          </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer></footer>
+
+    <style>
+      .journal-wrap {
+        max-width: 62rem;
+        padding-block: 5rem 7rem;
+      }
+      .journal-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+      .journal-eyebrow { color: var(--coral); margin-bottom: 0.75rem; }
+      .journal-title {
+        font-family: var(--font-serif);
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        color: var(--ocean);
+      }
+      .journal-posts {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      .journal-article {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 3rem;
+      }
+      .journal-article:last-child { border-bottom: none; }
+      .journal-date {
+        color: var(--muted-foreground);
+        margin-bottom: 0.75rem;
+      }
+      .journal-post-title {
+        font-family: var(--font-serif);
+        font-size: clamp(1.5rem, 4vw, 2.25rem);
+        color: var(--ocean);
+        margin-bottom: 0.75rem;
+      }
+      .journal-post-excerpt { color: var(--muted-foreground); line-height: 1.6; }
+    </style>
+  </body>
+</html>

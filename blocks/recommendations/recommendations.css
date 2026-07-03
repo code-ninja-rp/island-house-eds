@@ -1,0 +1,31 @@
+/* ─── Recommendations Block ────────────────────────────────────────────────── */
+
+.recommendations-inner {
+  border-top: 1px solid var(--border);
+  padding-top: 3rem;
+  padding-bottom: 6rem;
+}
+
+.recommendations-content {
+  text-align: center;
+}
+
+.recommendations-eyebrow {
+  color: var(--coral);
+  margin-bottom: 0.75rem;
+}
+
+.recommendations-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--ocean);
+  margin-bottom: 0.5rem;
+}
+
+.recommendations-desc {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  max-width: 28rem;
+  margin-inline: auto;
+  line-height: 1.6;
+}

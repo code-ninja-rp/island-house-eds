@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stores — Island House</title>
+    <meta name="description" content="Visit an Island House shop." />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/blocks/header/header.css" />
+    <link rel="stylesheet" href="/blocks/footer/footer.css" />
+    <script type="module" src="/scripts/scripts.js"></script>
+  </head>
+  <body>
+    <header></header>
+
+    <main>
+      <div class="section">
+        <div>
+          <div class="stores-wrap container-x max-w-site">
+          <!-- Header -->
+          <div class="stores-header">
+            <div class="eyebrow stores-eyebrow">Come Visit</div>
+            <h1 class="stores-title">The Shops</h1>
+            <p class="stores-sub">
+              Four porches, four ceiling fans, and a kettle always on somewhere in the back.
+            </p>
+          </div>
+
+          <!-- Store cards -->
+          <div class="stores-grid">
+            <div class="store-card">
+              <h2 class="store-city">Charleston, SC</h2>
+              <p class="store-address">212 King Street</p>
+              <p class="store-hours">Mon–Sat 10–7 · Sun 11–6</p>
+            </div>
+
+            <div class="store-card">
+              <h2 class="store-city">Naples, FL</h2>
+              <p class="store-address">540 Fifth Avenue South</p>
+              <p class="store-hours">Daily 10–8</p>
+            </div>
+
+            <div class="store-card">
+              <h2 class="store-city">Newport, RI</h2>
+              <p class="store-address">18 Bowen's Wharf</p>
+              <p class="store-hours">Mon–Sat 10–7 · Sun 11–5</p>
+            </div>
+
+            <div class="store-card">
+              <h2 class="store-city">Santa Barbara, CA</h2>
+              <p class="store-address">1116 State Street</p>
+              <p class="store-hours">Daily 10–7</p>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer></footer>
+
+    <style>
+      .stores-wrap {
+        max-width: 75rem;
+        padding-block: 5rem 7rem;
+      }
+      .stores-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+      .stores-eyebrow { color: var(--coral); margin-bottom: 0.75rem; }
+      .stores-title {
+        font-family: var(--font-serif);
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        color: var(--ocean);
+      }
+      .stores-sub {
+        margin-top: 1rem;
+        max-width: 36rem;
+        margin-inline: auto;
+        color: var(--muted-foreground);
+        line-height: 1.6;
+      }
+      .stores-grid {
+        display: grid;
+        gap: 2rem;
+      }
+      @media (min-width: 768px) {
+        .stores-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      .store-card {
+        border: 1px solid var(--border);
+        padding: 2rem;
+      }
+      .store-city {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        color: var(--ocean);
+        margin-bottom: 0.75rem;
+      }
+      .store-address {
+        font-size: 0.875rem;
+        color: var(--foreground);
+        margin-bottom: 0.25rem;
+      }
+      .store-hours {
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+    </style>
+  </body>
+</html>

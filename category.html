@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shop — Island House</title>
+    <meta
+      name="description"
+      content="Shop Island House — linen, silk, and easy cotton resort wear."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/blocks/header/header.css" />
+    <link rel="stylesheet" href="/blocks/footer/footer.css" />
+    <link rel="stylesheet" href="/blocks/product-list/product-list.css" />
+    <!-- Single module entry — scripts.js bootstraps blocks after DOM is ready -->
+    <script type="module" src="/scripts/scripts.js"></script>
+  </head>
+  <body>
+    <header></header>
+
+    <main>
+      <!-- ── Category header (pure HTML, not a block) ───────────────────── -->
+      <div class="section">
+        <div>
+          <div class="cat-header-inner container-x max-w-site" id="category-header">
+            <!-- Populated by the script below before blocks are decorated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AEP slot (hidden, set by script) ──────────────────────────── -->
+      <div id="category-aep-slot" style="display:none"></div>
+
+      <!-- ── Product grid block ────────────────────────────────────────── -->
+      <div class="section section--flush-top">
+        <div class="product-list" id="category-product-list"></div>
+      </div>
+    </main>
+
+    <footer></footer>
+
+    <style>
+      .cat-header-inner {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .category-header-eyebrow {
+        color: var(--coral);
+        margin-bottom: 0.75rem;
+      }
+      .category-h1 {
+        font-family: var(--font-serif);
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        color: var(--ocean);
+      }
+      .category-sub {
+        margin-top: 1rem;
+        max-width: 36rem;
+        margin-inline: auto;
+        color: var(--muted-foreground);
+        line-height: 1.6;
+      }
+      .section--flush-top { padding-top: 0; }
+    </style>
+
+    <!--
+      Inline classic script (NOT type="module") runs synchronously before
+      scripts.js module fires, so data-category is set on the block element
+      before EDS decoration happens.
+
+      We avoid type="module" here to prevent a second aem.js/products.js fetch.
+      getParam is a simple inline reimplementation — no import needed.
+    -->
+    <script>
+      (function () {
+        var cat = new URLSearchParams(window.location.search).get('category') || 'women';
+        var COPY = {
+          women:       { title: 'Women',       sub: 'Airy dresses, wide trousers, and sunlit knits — cut to move with the breeze.' },
+          men:         { title: 'Men',          sub: 'Camp shirts, linen suits, and swim shorts made for the golden hour.' },
+          accessories: { title: 'Accessories',  sub: 'Hats, totes, and the finishing details of an easy day.' },
+        };
+        var copy = COPY[cat] || COPY.women;
+
+        // Update page title
+        document.title = copy.title + ' — Island House';
+        document.querySelector('meta[name="description"]').content =
+          'Shop Island House ' + cat + ' — linen, silk, and easy cotton resort wear.';
+
+        // Wait for DOM to be ready, then populate header & set data-category
+        document.addEventListener('DOMContentLoaded', function () {
+          var headerEl = document.getElementById('category-header');
+          if (headerEl) {
+            headerEl.innerHTML =
+              '<div class="eyebrow category-header-eyebrow">The Collection</div>' +
+              '<h1 class="category-h1">' + copy.title + '</h1>' +
+              '<p class="category-sub">' + copy.sub + '</p>';
+          }
+
+          // Set data-category on block before scripts.js EDS decoration
+          var listBlock = document.getElementById('category-product-list');
+          if (listBlock) listBlock.dataset.category = cat;
+
+          // AEP slot
+          var slotEl = document.getElementById('category-aep-slot');
+          if (slotEl) slotEl.dataset.aepSlot = 'category-' + cat + '-banner';
+        });
+      })();
+    </script>
+  </body>
+</html>

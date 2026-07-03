@@ -1,0 +1,84 @@
+/* ─── Hero Block ───────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  height: 85vh;
+  min-height: 560px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Full-bleed background image */
+.hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Gradient overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* Content */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 5rem;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .hero-content {
+    padding-bottom: 7rem;
+  }
+}
+
+.hero-eyebrow {
+  opacity: 0.9;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.hero-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  line-height: 0.95;
+  max-width: 32rem;
+  color: white;
+}
+
+.hero-sub {
+  margin-top: 1.25rem;
+  max-width: 28rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+.hero-ctas {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Hidden AEP slot */
+.aep-slot {
+  display: none;
+}

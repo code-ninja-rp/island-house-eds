@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product — Island House</title>
+    <meta name="description" content="" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <!-- Critical styles loaded directly — no JS-driven CSS injection for PDP -->
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/blocks/header/header.css" />
+    <link rel="stylesheet" href="/blocks/footer/footer.css" />
+    <link rel="stylesheet" href="/blocks/product-detail/product-detail.css" />
+    <!-- Single module entry point — no second <script type="module"> to avoid double-fetch -->
+    <script type="module" src="/scripts/scripts.js"></script>
+    <!--
+      Note: page <title> and <meta name="description"> are set by
+      product-detail.js init() which already calls document.title = ...
+    -->
+  </head>
+  <body>
+    <header></header>
+
+    <main>
+      <div class="section">
+        <div class="product-detail"></div>
+      </div>
+    </main>
+
+    <footer></footer>
+  </body>
+</html>

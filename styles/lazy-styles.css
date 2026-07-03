@@ -1,0 +1,9 @@
+/*
+ * Island House — Lazy-loaded styles
+ * Non-critical CSS loaded after LCP. Add third-party overrides etc. here.
+ */
+
+/* Print */
+@media print {
+  header, footer { display: none; }
+}

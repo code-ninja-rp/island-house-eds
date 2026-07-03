@@ -1,0 +1,15 @@
+{
+  "name": "island-house-eds",
+  "version": "1.0.0",
+  "description": "Island House — Adobe Edge Delivery Services codebase (Tommy AEP Clone)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx @adobe/aem-cli up",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix"
+  },
+  "devDependencies": {
+    "@adobe/aem-cli": "^3.0.0"
+  }
+}
