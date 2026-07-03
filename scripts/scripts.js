@@ -22,7 +22,8 @@ async function loadHeader() {
   if (!headerEl || headerEl.querySelector('.header')) return; // guard against double-call
   const headerBlock = document.createElement('div');
   headerBlock.classList.add('header', 'block');
-  headerBlock.dataset.blockStatus = 'loading';
+  // NOTE: do NOT pre-set blockStatus here — decorateBlock sets it itself.
+  // Pre-setting causes decorateBlock's guard to bail immediately.
   headerEl.append(headerBlock);
   await decorateBlock(headerBlock);
 }
@@ -35,7 +36,7 @@ async function loadFooter() {
   if (!footerEl || footerEl.querySelector('.footer')) return; // guard against double-call
   const footerBlock = document.createElement('div');
   footerBlock.classList.add('footer', 'block');
-  footerBlock.dataset.blockStatus = 'loading';
+  // NOTE: do NOT pre-set blockStatus here — decorateBlock sets it itself.
   footerEl.append(footerBlock);
   await decorateBlock(footerBlock);
 }
@@ -75,7 +76,7 @@ async function loadPage() {
 
   // 3. Eagerly load LCP blocks — mark loading status first so lazy pass skips them
   const lcpBlocks = [...main.querySelectorAll(LCP_BLOCKS.map((b) => `.${b}.block`).join(', '))];
-  lcpBlocks.forEach((b) => { b.dataset.blockStatus = 'loading'; });
+  // NOTE: do NOT pre-set blockStatus — decorateBlock sets it itself and guards against double-load.
   await Promise.all(lcpBlocks.map((b) => decorateBlock(b)));
 
   // 4. Wait for LCP image
