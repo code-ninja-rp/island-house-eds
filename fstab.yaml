@@ -1,0 +1,5 @@
+mountpoints:
+  /:
+    url: "https://author-p133739-e1312325.adobeaemcloud.com/bin/franklin.delivery/code-ninja-rp/island-house-eds-xwalk/main"
+    type: "markup"
+    suffix: ".html"

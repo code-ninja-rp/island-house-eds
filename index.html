@@ -10,59 +10,65 @@
     />
     <!-- Open Graph -->
     <meta property="og:title" content="Island House — Resort Wear for the Long Way Home" />
-    <meta
-      property="og:description"
-      content="A Tommy Bahama website clone demonstrating Adobe Experience Platform (AEP) functionality."
-    />
+    <meta property="og:description" content="A Tommy Bahama website clone demonstrating Adobe Experience Platform (AEP) functionality." />
     <meta property="og:type" content="website" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Island House — Resort Wear for the Long Way Home" />
-    <meta
-      name="twitter:description"
-      content="A Tommy Bahama website clone demonstrating Adobe Experience Platform (AEP) functionality."
-    />
+    <meta name="twitter:description" content="A Tommy Bahama website clone demonstrating Adobe Experience Platform (AEP) functionality." />
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <!-- Critical styles — load block CSS directly so it applies immediately -->
+
+    <!--
+      xwalk / Universal Editor connection meta.
+      data-aue-resource attributes are injected per-node by AEM when served via fstab.
+    -->
+    <meta name="urn:auecon:aemconnection" content="aem:author" />
+
+    <!-- Critical styles -->
     <link rel="stylesheet" href="/styles/styles.css" />
     <link rel="stylesheet" href="/blocks/header/header.css" />
-    <link rel="stylesheet" href="/blocks/footer/footer.css" />
     <link rel="stylesheet" href="/blocks/hero/hero.css" />
-    <link rel="stylesheet" href="/blocks/categories/categories.css" />
-    <link rel="stylesheet" href="/blocks/product-list/product-list.css" />
-    <link rel="stylesheet" href="/blocks/recommendations/recommendations.css" />
-    <!-- EDS bootstrap -->
+
+    <!-- EDS bootstrap: aem.js runs setup() before scripts.js loads -->
+    <script type="module" src="/scripts/aem.js"></script>
     <script type="module" src="/scripts/scripts.js"></script>
   </head>
   <body>
     <header></header>
 
     <main>
-      <!-- ── Hero ──────────────────────────────────────────────────────── -->
-      <div class="section section--no-pad">
+      <!--
+        xwalk DOM contract:
+          main > div           ← raw section div (decorateSections adds .section + wraps children)
+            > div.blockname    ← block (decorateSections wraps in div; decorateBlocks finds section>div>div)
+
+        DO NOT add an extra <div> wrapper inside each section — decorateSections creates that wrapper
+        automatically. A manual wrapper would push blocks one level too deep for decorateBlocks.
+      -->
+
+      <!-- ── Hero ── (no-pad class on section so decorateSections preserves it) -->
+      <div class="no-pad">
         <div class="hero"></div>
       </div>
 
-      <!-- ── Story strip ───────────────────────────────────────────────── -->
-      <div class="section">
-        <div>
-          <div class="story-strip-wrap container-x max-w-site">
-            <div class="eyebrow story-eyebrow">Since a Tuesday in 2014</div>
-            <h2 class="story-heading">
-              A wardrobe cut for warm afternoons, salt air, and porch light dinners.
-            </h2>
-          </div>
+      <!-- ── Story strip ── (story-strip-wrap is treated as a layout div, not a block — that's fine) -->
+      <div>
+        <div class="story-strip-wrap container-x max-w-site">
+          <div class="eyebrow story-eyebrow">Since a Tuesday in 2014</div>
+          <h2 class="story-heading">
+            A wardrobe cut for warm afternoons, salt air, and porch light dinners.
+          </h2>
         </div>
       </div>
 
-      <!-- ── Categories ────────────────────────────────────────────────── -->
-      <div class="section section--flush-top">
+      <!-- ── Categories ── -->
+      <div class="flush-top">
         <div class="categories"></div>
       </div>
 
-      <!-- ── Featured products ─────────────────────────────────────────── -->
-      <div class="section">
+      <!-- ── Featured products ── -->
+      <div>
         <div
           class="product-list"
           data-eyebrow="The Editor's Table"
@@ -72,8 +78,8 @@
         ></div>
       </div>
 
-      <!-- ── AEP Recommendations slot ──────────────────────────────────── -->
-      <div class="section section--flush-top">
+      <!-- ── AEP Recommendations slot ── -->
+      <div class="flush-top">
         <div class="recommendations"></div>
       </div>
     </main>
@@ -81,8 +87,11 @@
     <footer></footer>
 
     <style>
-      .section--no-pad  { padding-block: 0; }
-      .section--flush-top { padding-top: 0; }
+      /* Section style modifiers — applied as classes on the section div.
+         In xwalk/AEM these come from section-metadata blocks.
+         In static local HTML we set them directly. */
+      main .section.no-pad    { padding-block: 0; }
+      main .section.flush-top { padding-top: 0; }
 
       .story-strip-wrap {
         text-align: center;

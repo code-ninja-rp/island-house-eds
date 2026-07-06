@@ -5,7 +5,8 @@
  */
 
 /* ─── Google Fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+/* Fonts are loaded lazily via styles/fonts.css by scripts.js loadFonts()       */
+/* @see scripts/scripts.js → loadFonts()                                         */
 
 /* ─── Custom Properties ────────────────────────────────────────────────────── */
 :root {
@@ -51,13 +52,33 @@ html {
   scroll-behavior: smooth;
 }
 
+/*
+ * ─── xwalk / Universal Editor FOUC prevention ───────────────────────────────
+ * body starts hidden; scripts.js adds .appear after the first section is loaded.
+ * header + footer start invisible; revealed once their block reaches 'loaded'.
+ */
 body {
+  display: none;
   margin: 0;
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body.appear {
+  display: block;
+}
+
+header .header,
+footer .footer {
+  visibility: hidden;
+}
+
+header .header[data-block-status="loaded"],
+footer .footer[data-block-status="loaded"] {
+  visibility: visible;
 }
 
 h1, h2, h3, h4 {

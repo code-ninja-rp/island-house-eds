@@ -11,9 +11,8 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/styles/styles.css" />
     <link rel="stylesheet" href="/blocks/header/header.css" />
-    <link rel="stylesheet" href="/blocks/footer/footer.css" />
     <link rel="stylesheet" href="/blocks/product-list/product-list.css" />
-    <!-- Single module entry — scripts.js bootstraps blocks after DOM is ready -->
+    <script type="module" src="/scripts/aem.js"></script>
     <script type="module" src="/scripts/scripts.js"></script>
   </head>
   <body>
@@ -21,11 +20,9 @@
 
     <main>
       <!-- ── Category header (pure HTML, not a block) ───────────────────── -->
-      <div class="section">
-        <div>
-          <div class="cat-header-inner container-x max-w-site" id="category-header">
-            <!-- Populated by the script below before blocks are decorated -->
-          </div>
+      <div>
+        <div class="cat-header-inner container-x max-w-site" id="category-header">
+          <!-- Populated by the script below before blocks are decorated -->
         </div>
       </div>
 
@@ -33,7 +30,7 @@
       <div id="category-aep-slot" style="display:none"></div>
 
       <!-- ── Product grid block ────────────────────────────────────────── -->
-      <div class="section section--flush-top">
+      <div class="flush-top">
         <div class="product-list" id="category-product-list"></div>
       </div>
     </main>
@@ -61,7 +58,7 @@
         color: var(--muted-foreground);
         line-height: 1.6;
       }
-      .section--flush-top { padding-top: 0; }
+      .section.flush-top { padding-top: 0; }
     </style>
 
     <!--

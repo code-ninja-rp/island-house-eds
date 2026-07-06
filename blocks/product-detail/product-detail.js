@@ -11,7 +11,9 @@
 
 import { getProduct, products } from '../../scripts/products.js';
 import { addToCart } from '../../scripts/cart.js';
-import { getParam } from '../../scripts/aem.js';
+
+/** Read a single URL search param. */
+const getParam = (name) => new URLSearchParams(window.location.search).get(name);
 
 /**
  * @param {HTMLElement} block

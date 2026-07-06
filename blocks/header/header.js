@@ -11,6 +11,7 @@
  *  - AEP personalization hook: data-aep-slot="global-banner"
  */
 
+import { getMetadata } from '../../scripts/aem.js';
 import { getCart, onCartChange } from '../../scripts/cart.js';
 
 const NAV = [

@@ -1,89 +1,196 @@
 /**
  * Island House — EDS Entry Point (scripts.js)
- * Bootstraps the page: loads critical CSS, decorates sections & blocks,
- * loads the header + footer blocks, then lazy-loads non-critical resources.
+ * Follows the xwalk boilerplate loadEager → loadLazy → loadDelayed sequence.
+ * Island House custom blocks (hero, categories, product-list, recommendations,
+ * header, footer, cart, product-detail) are preserved unchanged.
  */
 
 import {
+  buildBlock,
+  loadHeader,
+  loadFooter,
+  decorateIcons,
   decorateSections,
-  decorateBlocksInSections,
-  decorateBlock,
+  decorateBlocks,
+  decorateTemplateAndTheme,
+  waitForFirstImage,
+  loadSection,
+  loadSections,
   loadCSS,
-  waitForLCP,
+  getMetadata,
 } from './aem.js';
 
-const LCP_BLOCKS = ['hero'];
-
 /**
- * Load and decorate the header block.
+ * Moves all the attributes from a given element to another given element.
+ * @param {Element} from the element to copy attributes from
+ * @param {Element} to the element to copy attributes to
+ * @param {string[]} [attributes] optional list of attribute names to move
  */
-async function loadHeader() {
-  const headerEl = document.querySelector('header');
-  if (!headerEl || headerEl.querySelector('.header')) return; // guard against double-call
-  const headerBlock = document.createElement('div');
-  headerBlock.classList.add('header', 'block');
-  // NOTE: do NOT pre-set blockStatus here — decorateBlock sets it itself.
-  // Pre-setting causes decorateBlock's guard to bail immediately.
-  headerEl.append(headerBlock);
-  await decorateBlock(headerBlock);
+export function moveAttributes(from, to, attributes) {
+  if (!attributes) {
+    // eslint-disable-next-line no-param-reassign
+    attributes = [...from.attributes].map(({ nodeName }) => nodeName);
+  }
+  attributes.forEach((attr) => {
+    const value = from.getAttribute(attr);
+    if (value) {
+      to?.setAttribute(attr, value);
+      from.removeAttribute(attr);
+    }
+  });
 }
 
 /**
- * Load and decorate the footer block.
+ * Move instrumentation attributes (data-aue-* and data-richtext-*) from one element to another.
+ * Used by blocks that restructure their DOM after decoration so UE can still track nodes.
+ * @param {Element} from the element to copy attributes from
+ * @param {Element} to the element to copy attributes to
  */
-async function loadFooter() {
-  const footerEl = document.querySelector('footer');
-  if (!footerEl || footerEl.querySelector('.footer')) return; // guard against double-call
-  const footerBlock = document.createElement('div');
-  footerBlock.classList.add('footer', 'block');
-  // NOTE: do NOT pre-set blockStatus here — decorateBlock sets it itself.
-  footerEl.append(footerBlock);
-  await decorateBlock(footerBlock);
+export function moveInstrumentation(from, to) {
+  moveAttributes(
+    from,
+    to,
+    [...from.attributes]
+      .map(({ nodeName }) => nodeName)
+      .filter((attr) => attr.startsWith('data-aue-') || attr.startsWith('data-richtext-')),
+  );
 }
 
 /**
- * Decorate the main element: sections → blocks.
- * @param {HTMLElement} main
+ * Load fonts.css lazily and set a session storage flag to avoid re-loading on subsequent pages.
  */
-function decorateMain(main) {
+async function loadFonts() {
+  await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
+  try {
+    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+  } catch (e) {
+    // do nothing
+  }
+}
+
+/**
+ * Decorates formatted links to style them as buttons.
+ * Links wrapped in **bold** become `.button.primary`,
+ * links wrapped in _em_ become `.button.secondary`,
+ * links wrapped in both become `.button.accent`.
+ * @param {HTMLElement} main The main container element
+ */
+export function decorateButtons(main) {
+  main.querySelectorAll('p a[href]').forEach((a) => {
+    a.title = a.title || a.textContent;
+    const p = a.closest('p');
+    const text = a.textContent.trim();
+
+    if (a.querySelector('img') || p.textContent.trim() !== text) return;
+
+    try {
+      if (new URL(a.href).href === new URL(text, window.location).href) return;
+    } catch { /* continue */ }
+
+    const strong = a.closest('strong');
+    const em = a.closest('em');
+    if (!strong && !em) return;
+
+    p.className = 'button-wrapper';
+    a.className = 'button';
+    if (strong && em) {
+      a.classList.add('accent');
+      const outer = strong.contains(em) ? strong : em;
+      outer.replaceWith(a);
+    } else if (strong) {
+      a.classList.add('primary');
+      strong.replaceWith(a);
+    } else {
+      a.classList.add('secondary');
+      em.replaceWith(a);
+    }
+  });
+}
+
+/**
+ * Builds all synthetic blocks in a container element.
+ * Add auto-blocks here if needed (e.g. wrapping a hero image automatically).
+ */
+function buildAutoBlocks() {
+  try {
+    // TODO: add auto blocks if needed
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Auto Blocking failed', error);
+  }
+}
+
+/**
+ * Decorates the main element: icons → auto blocks → sections → blocks → buttons.
+ * @param {Element} main The main element
+ */
+export function decorateMain(main) {
+  decorateIcons(main);
+  buildAutoBlocks(main);
   decorateSections(main);
-  decorateBlocksInSections(main);
+  decorateBlocks(main);
+  decorateButtons(main);
 }
 
 /**
- * Lazy-load non-critical styles and remaining blocks.
- * @param {HTMLElement} main
+ * Loads everything needed to get to LCP (Largest Contentful Paint).
+ * Decorates the document, adds `body.appear`, and loads the first section.
+ * @param {Document} doc
  */
-async function loadLazy(main) {
-  await loadCSS('/styles/lazy-styles.css');
-  // Only pick up blocks that haven't started loading yet
-  const pending = main.querySelectorAll('.block:not([data-block-status])');
-  await Promise.all([...pending].map((b) => decorateBlock(b)));
+async function loadEager(doc) {
+  document.documentElement.lang = 'en';
+  decorateTemplateAndTheme();
+  const main = doc.querySelector('main');
+  if (main) {
+    decorateMain(main);
+    document.body.classList.add('appear');
+    await loadSection(main.querySelector('.section'), waitForFirstImage);
+  }
+
+  try {
+    /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css eagerly */
+    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
+      loadFonts();
+    }
+  } catch (e) {
+    // do nothing
+  }
 }
 
 /**
- * Main page load sequence.
+ * Loads everything that doesn't need to be delayed.
+ * Header, remaining sections, footer, lazy CSS, fonts.
+ * @param {Document} doc
  */
+async function loadLazy(doc) {
+  loadHeader(doc.querySelector('header'));
+
+  const main = doc.querySelector('main');
+  await loadSections(main);
+
+  const { hash } = window.location;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
+  if (hash && element) element.scrollIntoView();
+
+  loadFooter(doc.querySelector('footer'));
+
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadFonts();
+}
+
+/**
+ * Loads everything that happens a lot later, without impacting the user experience.
+ * Waits 3 seconds before importing delayed.js.
+ */
+function loadDelayed() {
+  // eslint-disable-next-line import/no-cycle
+  window.setTimeout(() => import('./delayed.js'), 3000);
+}
+
 async function loadPage() {
-  const main = document.querySelector('main');
-  if (!main) return;
-
-  // 1. Mark section structure and identify blocks
-  decorateMain(main);
-
-  // 2. Load header + footer (parallel)
-  await Promise.all([loadHeader(), loadFooter()]);
-
-  // 3. Eagerly load LCP blocks — mark loading status first so lazy pass skips them
-  const lcpBlocks = [...main.querySelectorAll(LCP_BLOCKS.map((b) => `.${b}.block`).join(', '))];
-  // NOTE: do NOT pre-set blockStatus — decorateBlock sets it itself and guards against double-load.
-  await Promise.all(lcpBlocks.map((b) => decorateBlock(b)));
-
-  // 4. Wait for LCP image
-  await waitForLCP();
-
-  // 5. Lazy-load everything else — only blocks with no status yet
-  loadLazy(main).catch(console.error);
+  await loadEager(document);
+  await loadLazy(document);
+  loadDelayed();
 }
 
 loadPage();

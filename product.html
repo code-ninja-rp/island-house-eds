@@ -6,23 +6,26 @@
     <title>Product — Island House</title>
     <meta name="description" content="" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <!-- Critical styles loaded directly — no JS-driven CSS injection for PDP -->
     <link rel="stylesheet" href="/styles/styles.css" />
     <link rel="stylesheet" href="/blocks/header/header.css" />
-    <link rel="stylesheet" href="/blocks/footer/footer.css" />
     <link rel="stylesheet" href="/blocks/product-detail/product-detail.css" />
-    <!-- Single module entry point — no second <script type="module"> to avoid double-fetch -->
+    <!-- EDS bootstrap: aem.js runs setup() before scripts.js -->
+    <script type="module" src="/scripts/aem.js"></script>
     <script type="module" src="/scripts/scripts.js"></script>
     <!--
-      Note: page <title> and <meta name="description"> are set by
-      product-detail.js init() which already calls document.title = ...
+      Note: page <title> and <meta name="description"> are updated by
+      product-detail.js init() after reading ?slug= from the URL.
     -->
   </head>
   <body>
     <header></header>
 
     <main>
-      <div class="section">
+      <!--
+        xwalk structure: main > div (section) > div.block
+        decorateSections auto-wraps the block div — do NOT add a manual wrapper.
+      -->
+      <div>
         <div class="product-detail"></div>
       </div>
     </main>
