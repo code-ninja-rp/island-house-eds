@@ -8,13 +8,35 @@
     <meta name="robots" content="noindex" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/styles/styles.css" />
+    <script type="module" src="/scripts/aem.js"></script>
     <script type="module" src="/scripts/scripts.js"></script>
+
+    <!--
+      Root path redirect:
+      EDS serves 404.html for clean URLs that have no content-source document,
+      including the root path "/". When the path is exactly "/" we redirect
+      immediately to /index.html so the homepage always loads at both URLs.
+    -->
+    <script>
+      (function () {
+        var p = window.location.pathname;
+        if (p === '/' || p === '') {
+          window.location.replace('/index.html');
+        }
+      }());
+    </script>
   </head>
   <body>
     <header></header>
 
     <main>
-      <div class="section">
+      <!--
+        xwalk DOM: section > block (no manual wrapper — decorateSections creates it).
+        .notfound-wrap has a class so decorateSections treats it as a block-like
+        element (wraps in div, tries to load blocks/notfound-wrap — fails silently).
+        Styling is self-contained via the inline <style> block below.
+      -->
+      <div>
         <div class="notfound-wrap">
           <h1 class="notfound-title">Off the map</h1>
           <p class="notfound-desc">
