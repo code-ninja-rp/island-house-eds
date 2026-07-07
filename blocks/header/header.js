@@ -17,11 +17,11 @@ import { getCart, onCartChange } from '../../scripts/cart.js';
 import { getUser, clearUser, setReturnUrl } from '../../scripts/auth.js';
 
 const NAV = [
-  { href: '/category.html?category=women',      label: 'Women' },
-  { href: '/category.html?category=men',        label: 'Men' },
+  { href: '/category.html?category=women', label: 'Women' },
+  { href: '/category.html?category=men', label: 'Men' },
   { href: '/category.html?category=accessories', label: 'Accessories' },
-  { href: '/journal.html',                       label: 'Journal' },
-  { href: '/stores.html',                        label: 'Stores' },
+  { href: '/journal.html', label: 'Journal' },
+  { href: '/stores.html', label: 'Stores' },
 ];
 
 function buildHeader(block) {
@@ -45,7 +45,7 @@ function buildHeader(block) {
         ${NAV.slice(0, 3).map((n) => `<a href="${n.href}" class="header-nav-link">${n.label}</a>`).join('')}
       </nav>
 
-      <a href="/index.html" class="header-logo">Island House</a>
+      <a href="/" class="header-logo">Island House</a>
 
       <div class="header-actions">
         <nav class="header-nav-right" aria-label="Secondary">
@@ -106,7 +106,7 @@ function buildHeader(block) {
   `;
 
   // ── Mobile hamburger ────────────────────────────────────────────────────────
-  const menuBtn   = block.querySelector('#header-menu-btn');
+  const menuBtn = block.querySelector('#header-menu-btn');
   const mobileNav = block.querySelector('#header-mobile-nav');
   menuBtn.addEventListener('click', () => {
     const isOpen = mobileNav.classList.toggle('hidden', !mobileNav.classList.contains('hidden'));
@@ -127,12 +127,12 @@ function buildHeader(block) {
   });
 
   // ── Auth state ──────────────────────────────────────────────────────────────
-  const accountBtn   = block.querySelector('#header-account-btn');
-  const userWrap     = block.querySelector('#header-user-wrap');
-  const userNameEl   = block.querySelector('#header-user-name');
-  const userBtn      = block.querySelector('#header-user-btn');
+  const accountBtn = block.querySelector('#header-account-btn');
+  const userWrap = block.querySelector('#header-user-wrap');
+  const userNameEl = block.querySelector('#header-user-name');
+  const userBtn = block.querySelector('#header-user-btn');
   const userDropdown = block.querySelector('#header-user-dropdown');
-  const logoutBtn    = block.querySelector('#header-logout-btn');
+  const logoutBtn = block.querySelector('#header-logout-btn');
 
   function applyAuthState() {
     const user = getUser();
