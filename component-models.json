@@ -108,7 +108,8 @@
         "options": [
           { "name": "No Padding", "value": "no-pad" },
           { "name": "Flush Top", "value": "flush-top" },
-          { "name": "Highlight", "value": "highlight" }
+          { "name": "Highlight", "value": "highlight" },
+          { "name": "Story Strip", "value": "story-strip" }
         ]
       }
     ]

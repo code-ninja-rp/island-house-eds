@@ -30,8 +30,10 @@
           "name": "style",
           "label": "Style",
           "options": [
-            { "name": "Highlight",  "value": "highlight" },
-            { "name": "Story Strip", "value": "story-strip" }
+            {
+              "name": "Highlight",
+              "value": "highlight"
+            }
           ]
         }
       ]
