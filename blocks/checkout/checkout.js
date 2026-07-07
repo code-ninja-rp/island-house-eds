@@ -11,7 +11,7 @@
  */
 
 import { getCart, clearCart } from '../../scripts/cart.js';
-import { getUser } from '../../scripts/auth.js';
+import { getUser, setReturnUrl } from '../../scripts/auth.js';
 import { trackCheckoutStep, trackOrderComplete } from '../../scripts/aep.js';
 
 // ─── Demo data ────────────────────────────────────────────────────────────────
@@ -340,6 +340,12 @@ function ensurePaypalOverlay(paypalEmail) {
 
 // ─── Main init ────────────────────────────────────────────────────────────────
 export default function init(block) {
+  if (!getUser()) {
+    setReturnUrl('/checkout.html');
+    window.location.replace('/login.html');
+    return;
+  }
+
   const { itemsDetailed } = getCart();
   if (itemsDetailed.length === 0) {
     window.location.replace('/cart.html');

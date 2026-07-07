@@ -12,6 +12,7 @@
 import { getCart, removeFromCart, setQty } from '../../scripts/cart.js';
 import { onCartChange } from '../../scripts/cart.js';
 import { trackBeginCheckout } from '../../scripts/aep.js';
+import { getUser, setReturnUrl } from '../../scripts/auth.js';
 
 /**
  * @param {HTMLElement} block
@@ -117,6 +118,11 @@ export default function init(block) {
     const checkoutBtn = block.querySelector('.cart-checkout-btn');
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
+        if (!getUser()) {
+          setReturnUrl('/checkout.html');
+          window.location.href = '/login.html';
+          return;
+        }
         const { itemsDetailed, subtotal } = getCart();
         const shippingCost = subtotal > 150 || subtotal === 0 ? 0 : 12;
         trackBeginCheckout(itemsDetailed, subtotal + shippingCost);

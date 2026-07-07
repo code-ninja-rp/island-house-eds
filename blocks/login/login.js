@@ -111,6 +111,11 @@ export default function init(block) {
   const emailInput = block.querySelector('#login-email');
   const pwInput    = block.querySelector('#login-password');
 
+  // Demo auto-fill
+  nameInput.value  = 'Alex Rivera';
+  emailInput.value = 'alex.rivera@example.com';
+  pwInput.value    = 'Password';
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearError(errorEl);
