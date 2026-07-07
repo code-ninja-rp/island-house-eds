@@ -319,6 +319,57 @@ export function trackLoginSuccess(user) {
   sendEvent(xdm);
 }
 
+// ─── Checkout Step ────────────────────────────────────────────────────────────
+
+/**
+ * Fire when the user advances to a checkout step.
+ * @param {number} step   1 = Shipping, 2 = Payment, 3 = Review
+ * @param {string} [method]  Payment method for step 2+: 'card' | 'paypal'
+ */
+export function trackCheckoutStep(step, method) {
+  const xdm = {
+    eventType: 'commerce.checkouts',
+    commerce: {
+      checkouts: { value: 1 },
+      checkout: { value: step },
+    },
+    _experience: {
+      analytics: {
+        customDimensions: {
+          eVars: { eVar4: String(step), eVar5: method || '' },
+        },
+      },
+    },
+  };
+  log(`🛒 checkoutStep${step}`, { step, method, xdm });
+  sendEvent(xdm);
+}
+
+// ─── Order Complete ───────────────────────────────────────────────────────────
+
+/**
+ * Fire on successful order placement.
+ * @param {{ orderNumber: string, items: Array, total: number }} order
+ */
+export function trackOrderComplete(order) {
+  const xdm = {
+    eventType: 'commerce.purchases',
+    commerce: {
+      purchases: { value: 1 },
+      order: {
+        priceTotal: order.total,
+        currencyCode: 'USD',
+        payments: [{ transactionID: order.orderNumber, paymentAmount: order.total }],
+      },
+    },
+    productListItems: order.items.map((l) => xdmProduct({ ...l.product, qty: l.qty })),
+  };
+  log('🎉 orderComplete', { orderNumber: order.orderNumber, total: order.total, xdm });
+  sendEvent(xdm);
+}
+
+// ─── Logout ───────────────────────────────────────────────────────────────────
+
 /**
  * Fire when the user clicks Log out.
  * @param {{ name: string, email: string }} user

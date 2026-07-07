@@ -1,0 +1,657 @@
+/* ─── Checkout Block ─────────────────────────────────────────────────────── */
+
+.checkout {
+  background: var(--background);
+}
+
+.co-wrap {
+  padding-block: 3rem 5rem;
+}
+
+/* ── Page header ── */
+.co-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.co-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: var(--ocean);
+  margin-bottom: 1.75rem;
+}
+
+/* ── Step progress bar ── */
+.co-steps-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.co-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+}
+
+.co-step-item.is-active {
+  color: var(--ocean);
+  font-weight: 600;
+}
+
+.co-step-item.is-done {
+  color: var(--palm);
+}
+
+.co-step-num {
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.co-step-item.is-active .co-step-num {
+  background: var(--ocean);
+  border-color: var(--ocean);
+  color: white;
+}
+
+.co-step-item.is-done .co-step-num {
+  background: var(--palm);
+  border-color: var(--palm);
+  color: white;
+}
+
+.co-step-sep {
+  width: 3rem;
+  height: 1px;
+  background: var(--border);
+  margin-inline: 0.5rem;
+  list-style: none;
+}
+
+/* ── Demo notice banner ── */
+.co-demo-notice {
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  margin-bottom: 2.5rem;
+}
+
+/* ── Two-column layout ── */
+.co-layout {
+  display: grid;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .co-layout { grid-template-columns: 1fr 360px; }
+}
+
+/* ── Panel (each step) ── */
+.co-panel { transition: opacity 0.2s; }
+.co-panel.hidden { display: none; }
+
+.co-panel-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--ocean);
+  margin-bottom: 1.75rem;
+}
+
+/* ── Fieldset / legend ── */
+.co-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1.75rem;
+}
+
+.co-legend {
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+  padding-bottom: 0.5rem;
+}
+
+/* ── Form grid ── */
+.co-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.co-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.co-field-full { grid-column: 1 / -1; }
+.co-field-sm   { /* default 1-col in 2-col grid = half width */ }
+
+.co-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.co-opt {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+}
+
+.co-input {
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 0;
+  appearance: none;
+}
+
+.co-input:focus  { border-color: var(--ocean); }
+.co-input::placeholder { color: var(--muted-foreground); opacity: 0.65; }
+
+.co-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.5rem;
+}
+
+/* ── Error ── */
+.co-error {
+  font-size: 0.8125rem;
+  color: var(--destructive);
+  margin: 0 0 0.75rem;
+}
+.co-error.hidden { display: none; }
+
+/* ── Action row ── */
+.co-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.co-continue-btn { padding-inline: 2rem; }
+
+.co-back-btn {
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.co-back-btn:hover { color: var(--foreground); }
+
+/* ── Payment tabs ── */
+.co-pay-tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+
+.co-pay-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background: var(--card);
+  border: none;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  transition: background 0.2s, color 0.2s;
+}
+.co-pay-tab:last-child { border-right: none; }
+.co-pay-tab.is-active  { background: var(--ocean); color: white; }
+.co-pay-tab:hover:not(.is-active) { background: var(--secondary); color: var(--foreground); }
+
+.co-pay-panel { }
+.co-pay-panel.hidden { display: none; }
+
+/* ── Credit card visual ── */
+.co-card-vis {
+  background: linear-gradient(135deg, var(--ocean) 0%, oklch(0.25 0.1 240) 100%);
+  border-radius: 14px;
+  padding: 1.5rem 1.625rem;
+  color: white;
+  max-width: 300px;
+  aspect-ratio: 1.586;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shine overlay */
+.co-card-vis::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.co-card-vis-chip {
+  width: 2.25rem;
+  height: 1.75rem;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #d4a847 0%, #f5d07e 50%, #c4952c 100%);
+}
+
+.co-card-vis-number {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.9);
+}
+
+.co-card-vis-foot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.85);
+}
+
+.co-card-vis-brand {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.8);
+  font-style: italic;
+}
+
+/* ── PayPal panel ── */
+.co-paypal-info-box {
+  border: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  background: var(--card);
+}
+
+.co-paypal-blurb {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+  margin-bottom: 1.5rem;
+}
+
+.co-paypal-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: #0070ba;
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.co-paypal-cta:hover { background: #005ea6; }
+
+/* PayPal logo style (used in tab + CTA + overlay) */
+.co-pp-logo em   { color: #009CDE; font-style: normal; }
+.co-pp-logo strong { color: #012169; }
+.co-pp-logo-lg {
+  font-size: 1.75rem;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+}
+
+/* ── PayPal overlay ── */
+.co-paypal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+  padding: 1rem;
+}
+
+.co-paypal-overlay.hidden { display: none; }
+
+.co-paypal-modal {
+  background: white;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+}
+
+.co-paypal-modal-hd {
+  background: #003087;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+}
+
+.co-paypal-modal-bd {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.co-pp-signing {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.co-pp-email {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 1.75rem;
+}
+
+.co-pp-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #555;
+  font-size: 0.9375rem;
+}
+
+.co-pp-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-top-color: #0070ba;
+  border-radius: 50%;
+  animation: co-spin 0.7s linear infinite;
+}
+
+@keyframes co-spin {
+  to { transform: rotate(360deg); }
+}
+
+.co-pp-approved {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #007f33;
+}
+
+.co-pp-approved.hidden { display: none; }
+.co-pp-status.hidden   { display: none; }
+
+.co-pp-check {
+  font-size: 1.5rem;
+}
+
+/* ── Review step ── */
+.co-review-card {
+  border: 1px solid var(--border);
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+
+.co-review-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.co-review-row-last { border-bottom: none; }
+
+.co-review-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  padding-top: 0.125rem;
+}
+
+.co-review-value {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--foreground);
+}
+
+.co-review-addr {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+
+.co-edit-btn {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ocean);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+  white-space: nowrap;
+  padding-top: 0.125rem;
+}
+.co-edit-btn:hover { color: var(--coral); }
+
+.co-review-items {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.co-review-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.co-review-img {
+  width: 56px;
+  height: 72px;
+  object-fit: cover;
+  background: var(--muted);
+  flex-shrink: 0;
+}
+
+.co-review-item-body { flex: 1; }
+
+.co-review-item-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--foreground);
+}
+
+.co-review-item-meta {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-top: 0.2rem;
+}
+
+.co-review-item-price { font-size: 0.875rem; }
+
+.co-review-totals {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.co-review-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.co-review-total-row:first-child span:first-child { color: var(--muted-foreground); }
+
+.co-review-grand {
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.co-place-btn { padding-inline: 2rem; }
+
+/* ── Order summary sidebar ── */
+.co-sidebar {
+  background: var(--secondary);
+  padding: 1.75rem;
+  position: sticky;
+  top: 5rem;
+}
+
+.co-sidebar-eyebrow {
+  margin-bottom: 1.25rem;
+  color: var(--muted-foreground);
+}
+
+.co-sidebar-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.co-sidebar-item {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+}
+
+.co-sidebar-img-wrap {
+  position: relative;
+  width: 64px;
+  height: 85px;
+  flex-shrink: 0;
+}
+
+.co-sidebar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--muted);
+}
+
+.co-sidebar-qty {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.5rem;
+  background: var(--foreground);
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  width: 1.125rem;
+  height: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.co-sidebar-item-body { flex: 1; }
+
+.co-sidebar-item-name {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--foreground);
+}
+
+.co-sidebar-item-meta {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-top: 0.2rem;
+}
+
+.co-sidebar-item-price {
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.co-sidebar-totals { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.co-sidebar-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.co-sidebar-row span:first-child { color: var(--muted-foreground); }
+
+.co-sidebar-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+}

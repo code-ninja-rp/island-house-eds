@@ -113,13 +113,14 @@ export default function init(block) {
       });
     });
 
-    // ── AEP: begin checkout ────────────────────────────────────────────
+    // ── AEP: begin checkout + navigate ────────────────────────────────
     const checkoutBtn = block.querySelector('.cart-checkout-btn');
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
         const { itemsDetailed, subtotal } = getCart();
-        const shipping = subtotal > 150 || subtotal === 0 ? 0 : 12;
-        trackBeginCheckout(itemsDetailed, subtotal + shipping);
+        const shippingCost = subtotal > 150 || subtotal === 0 ? 0 : 12;
+        trackBeginCheckout(itemsDetailed, subtotal + shippingCost);
+        window.location.href = '/checkout.html';
       });
     }
   }
