@@ -263,3 +263,81 @@ export function trackBeginCheckout(cartLines, total) {
   log('💳 beginCheckout', { lines: cartLines.length, total, items: cartLines.map((l) => l.product.name), xdm });
   sendEvent(xdm);
 }
+
+// ─── Auth Events ──────────────────────────────────────────────────────────────
+
+/**
+ * Fire when the login form is submitted with valid inputs.
+ * @param {string} email
+ */
+export function trackLoginAttempt(email) {
+  const xdm = {
+    eventType: 'web.formFilledOut',
+    web: {
+      webInteraction: {
+        name: 'login-attempt',
+        type: 'form',
+        linkClicks: { value: 1 },
+      },
+    },
+    _experience: {
+      analytics: {
+        customDimensions: { eVars: { eVar2: email } },
+      },
+    },
+  };
+
+  log('🔑 loginAttempt', { email, xdm });
+  sendEvent(xdm);
+}
+
+/**
+ * Fire on successful login. Sends authenticated identity to AEP.
+ * @param {{ name: string, email: string }} user
+ */
+export function trackLoginSuccess(user) {
+  const xdm = {
+    eventType: 'web.formFilledOut',
+    web: {
+      webInteraction: {
+        name: 'login-success',
+        type: 'form',
+        linkClicks: { value: 1 },
+      },
+    },
+    identityMap: {
+      Email: [{ id: user.email, primary: true, authenticatedState: 'authenticated' }],
+    },
+    _experience: {
+      analytics: {
+        customDimensions: { eVars: { eVar2: user.email, eVar3: user.name } },
+      },
+    },
+  };
+
+  log('✅ loginSuccess', { user, xdm });
+  sendEvent(xdm);
+}
+
+/**
+ * Fire when the user clicks Log out.
+ * @param {{ name: string, email: string }} user
+ */
+export function trackLogout(user) {
+  const xdm = {
+    eventType: 'web.webinteraction.click',
+    web: {
+      webInteraction: {
+        name: 'logout',
+        type: 'other',
+        linkClicks: { value: 1 },
+      },
+    },
+    identityMap: {
+      Email: [{ id: user.email, primary: true, authenticatedState: 'loggedOut' }],
+    },
+  };
+
+  log('👋 logout', { user, xdm });
+  sendEvent(xdm);
+}

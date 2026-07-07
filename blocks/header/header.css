@@ -93,12 +93,74 @@
 
 .header-icon-btn:hover { color: var(--coral); }
 
-.header-account-btn {
+/* Account area — hidden on small screens; reveals at 640 px */
+.header-account-area {
   display: none;
+  position: relative;
+  align-items: center;
 }
 
 @media (min-width: 640px) {
-  .header-account-btn { display: flex; }
+  .header-account-area { display: flex; }
+}
+
+/* When JS swaps the auth state these toggle visibility */
+.header-account-btn.hidden { display: none; }
+.header-user-wrap.hidden   { display: none; }
+
+/* ── User name button (logged-in state) ── */
+.header-user-wrap { position: relative; }
+
+.header-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.375rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.header-user-btn:hover { color: var(--coral); }
+
+/* ── Logout dropdown ── */
+.header-user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 148px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  z-index: 200;
+}
+
+.header-user-dropdown.hidden { display: none; }
+
+.header-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s;
+}
+
+.header-dropdown-item:hover {
+  background: var(--secondary);
+  color: var(--ocean);
 }
 
 /* Cart badge */
