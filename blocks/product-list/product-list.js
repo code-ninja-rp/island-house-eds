@@ -17,6 +17,7 @@
  */
 
 import { products, byCategory } from '../../scripts/products.js';
+import { trackProductListView, trackProductClick } from '../../scripts/aep.js';
 
 /**
  * Build a single product card element.
@@ -111,7 +112,17 @@ export default function init(block) {
   // Build grid
   const grid = document.createElement('div');
   grid.className = 'product-list-grid';
-  items.forEach((p) => grid.append(buildCard(p)));
+  const listName = category ? `category-${category}` : (heading || 'product-list');
+
+  items.forEach((p) => {
+    const card = buildCard(p);
+    // ── AEP: product click ────────────────────────────────────────────────
+    card.addEventListener('click', (e) => {
+      // Allow the navigation to proceed but fire the event first
+      trackProductClick(p, listName);
+    });
+    grid.append(card);
+  });
 
   // Wrap in container
   const wrap = document.createElement('div');
@@ -121,4 +132,23 @@ export default function init(block) {
 
   block.innerHTML = '';
   block.append(wrap);
+
+  // ── AEP: product list impression (fires once when grid enters viewport) ──
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trackProductListView(items, listName);
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.2 },
+    );
+    observer.observe(grid);
+  } else {
+    // Fallback for browsers without IntersectionObserver
+    trackProductListView(items, listName);
+  }
 }

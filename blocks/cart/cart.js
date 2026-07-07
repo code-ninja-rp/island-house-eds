@@ -11,6 +11,7 @@
 
 import { getCart, removeFromCart, setQty } from '../../scripts/cart.js';
 import { onCartChange } from '../../scripts/cart.js';
+import { trackBeginCheckout } from '../../scripts/aep.js';
 
 /**
  * @param {HTMLElement} block
@@ -111,6 +112,16 @@ export default function init(block) {
         setQty(i, items[i].qty + 1);
       });
     });
+
+    // ── AEP: begin checkout ────────────────────────────────────────────
+    const checkoutBtn = block.querySelector('.cart-checkout-btn');
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', () => {
+        const { itemsDetailed, subtotal } = getCart();
+        const shipping = subtotal > 150 || subtotal === 0 ? 0 : 12;
+        trackBeginCheckout(itemsDetailed, subtotal + shipping);
+      });
+    }
   }
 
   render();

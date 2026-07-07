@@ -11,6 +11,7 @@
 
 import { getProduct, products } from '../../scripts/products.js';
 import { addToCart } from '../../scripts/cart.js';
+import { trackProductView, trackAddToCart } from '../../scripts/aep.js';
 
 /** Read a single URL search param. */
 const getParam = (name) => new URLSearchParams(window.location.search).get(name);
@@ -34,6 +35,9 @@ export default function init(block) {
 
   // Update page <title>
   document.title = `${product.name} — Island House`;
+
+  // ── AEP: product detail view ─────────────────────────────────────────────
+  trackProductView(product);
 
   // Related products (exclude current)
   const related = products.filter((p) => p.id !== product.id).slice(0, 4);
@@ -180,6 +184,9 @@ export default function init(block) {
   atbBtn.addEventListener('click', () => {
     if (added) return;
     addToCart({ productId: product.id, size: selectedSize, color: selectedColor, qty: 1 });
+
+    // ── AEP: add to cart ───────────────────────────────────────────────────
+    trackAddToCart(product, { size: selectedSize, color: selectedColor, qty: 1 });
     atbBtn.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="20 6 9 17 4 12"/>
