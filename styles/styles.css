@@ -210,3 +210,19 @@ main .section:first-of-type {
 /* ─── Header / Footer shell (block-overrides applied in block CSS) ─────────── */
 header { position: sticky; top: 0; z-index: 40; }
 footer { margin-top: 6rem; }
+
+/* ─── Section Styles ───────────────────────────────────────────────────────── */
+.section.story-strip {
+  text-align: center;
+}
+.section.story-strip .default-content-wrapper p {
+  color: var(--coral);
+  margin-bottom: 1rem;
+}
+.section.story-strip .default-content-wrapper h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  max-width: 48rem;
+  margin-inline: auto;
+  color: var(--ocean);
+}
