@@ -2,11 +2,15 @@
  * Island House — Product List Block
  * Port of src/components/product-card.tsx + category/index page grids.
  *
- * Accepts optional data attributes on the block element:
- *   data-category="women|men|accessories"  — filter by category
- *   data-limit="4"                          — limit number shown (default: all)
- *   data-heading="Just landed"              — optional section heading
- *   data-eyebrow="The Editor's Table"       — optional eyebrow
+ * Supports TWO authoring paths:
+ *   1. Static/code pages (category.html): values set as data-* attributes
+ *      on the block element before decoration runs (data-category,
+ *      data-limit, data-heading, data-eyebrow, data-view-all).
+ *   2. Universal Editor (xwalk): field values authored via component-models.json
+ *      are written as child row divs in field-definition order — this block
+ *      reads and strips those rows the same way Hero does.
+ *
+ * data-* attributes always win when present, so the static path is untouched.
  *
  * Each card: 4:5 image, "New" badge, serif name, price.
  * Includes data-aep-product-id on each card.
@@ -48,21 +52,47 @@ function buildCard(product) {
 }
 
 /**
+ * Read a UE-authored row's content as trimmed text, or the href of an
+ * anchor inside it if one exists (link/reference fields sometimes render
+ * as an <a>, plain text fields render as inner text).
+ * @param {Element | undefined} row
+ * @returns {string | undefined}
+ */
+function readRowValue(row) {
+  if (!row) return undefined;
+  const link = row.querySelector('a[href]');
+  if (link) return link.getAttribute('href') || undefined;
+  const text = row.textContent?.trim();
+  return text || undefined;
+}
+
+/**
  * @param {HTMLElement} block
  */
 export default function init(block) {
-  // category: from data attr (set by page) or from ?category= URL param
+  // Capture UE-authored row children BEFORE any mutation. Field order here
+  // must match the field order in component-models.json's "product-list"
+  // model: eyebrow, heading, limit, viewAll. Confirm via view-source if
+  // this ever drifts from what's actually authored.
+  const rows = [...block.children];
+
+  // category: static data attr, or ?category= URL param (category.html path).
+  // Not authored via UE on the homepage — stays null there, which is correct
+  // (the homepage "Just landed" section shows the full catalog, unfiltered).
   const category = block.dataset.category
     || new URLSearchParams(window.location.search).get('category')
     || null;
 
-  const limit = block.dataset.limit ? parseInt(block.dataset.limit, 10) : undefined;
-  const heading = block.dataset.heading;
-  const eyebrow = block.dataset.eyebrow;
-  const viewAllHref = block.dataset.viewAll;
+  const eyebrow = block.dataset.eyebrow || readRowValue(rows[0]);
+  const heading = block.dataset.heading || readRowValue(rows[1]);
+
+  const rawLimit = block.dataset.limit || readRowValue(rows[2]);
+  const limit = rawLimit ? parseInt(rawLimit, 10) : undefined;
+
+  const viewAllHref = block.dataset.viewAll || readRowValue(rows[3]);
 
   let items = category ? byCategory(/** @type {any} */(category)) : products;
-  if (limit) items = items.slice(0, limit);
+  if (limit && !Number.isNaN(limit)) items = items.slice(0, limit);
 
   // Optional header row (used on homepage featured section)
   let headerHTML = '';
@@ -92,4 +122,3 @@ export default function init(block) {
   block.innerHTML = '';
   block.append(wrap);
 }
-
