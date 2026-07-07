@@ -33,7 +33,7 @@ export default function init(block) {
         ${itemsDetailed.length === 0
           ? `<div class="cart-empty">
               <p class="cart-empty-msg">Your bag is as empty as a beach at sunrise.</p>
-              <a href="/index.html" class="btn-primary">Start shopping</a>
+              <a href="/" class="btn-primary">Start shopping</a>
             </div>`
           : `<div class="cart-layout">
               <!-- Line items -->

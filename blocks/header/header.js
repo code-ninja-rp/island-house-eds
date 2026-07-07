@@ -176,7 +176,7 @@ function buildHeader(block) {
       import('../../scripts/aep.js').then(({ trackLogout }) => trackLogout(user));
     }
     clearUser();
-    window.location.replace('/index.html');
+    window.location.replace('/');
   });
 
   applyAuthState();

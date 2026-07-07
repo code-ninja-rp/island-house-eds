@@ -27,7 +27,7 @@ export default function init(block) {
     block.innerHTML = `
       <div class="pdp-not-found container-x max-w-site">
         <h1 class="pdp-not-found-title">Product not found</h1>
-        <a href="/index.html" class="btn-primary">Back to shop</a>
+        <a href="/" class="btn-primary">Back to shop</a>
       </div>
     `;
     return;
@@ -46,7 +46,7 @@ export default function init(block) {
     <div class="pdp-wrap container-x max-w-site">
       <!-- Breadcrumb -->
       <nav class="pdp-breadcrumb" aria-label="Breadcrumb">
-        <a href="/index.html">Home</a>
+        <a href="/">Home</a>
         <span aria-hidden="true">/</span>
         <a href="/category.html?category=${product.category}" class="pdp-breadcrumb-cat">${cap(product.category)}</a>
         <span aria-hidden="true">/</span>

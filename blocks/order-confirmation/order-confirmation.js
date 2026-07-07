@@ -98,7 +98,7 @@ export default function init(block) {
 
       <!-- CTA -->
       <div class="oc-actions">
-        <a href="/index.html" class="btn-primary oc-cta">Continue Shopping</a>
+        <a href="/" class="btn-primary oc-cta">Continue Shopping</a>
       </div>
 
     </div>`;
