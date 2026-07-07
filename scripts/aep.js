@@ -15,6 +15,21 @@
  *  - cart:view          → shopping cart view
  */
 
+// ─── Logger ───────────────────────────────────────────────────────────────────
+
+const AEP_PREFIX = '%c[AEP]';
+const AEP_STYLE  = 'color:#eb1000;font-weight:bold;'; // Adobe red
+
+/**
+ * Pretty-print every AEP event to the browser console so you can verify
+ * what is being sent without opening the Network tab.
+ *
+ * @param {string} label  Short human-readable event name
+ * @param {Object} xdm    The full XDM payload being dispatched
+ */
+// eslint-disable-next-line no-console
+const log = (label, xdm) => console.log(AEP_PREFIX, AEP_STYLE, label, xdm);
+
 // ─── Alloy helper ─────────────────────────────────────────────────────────────
 
 /**
@@ -84,7 +99,7 @@ export function trackPageView() {
   const pageName = document.title.replace(' — Island House', '').trim();
   const path = window.location.pathname;
 
-  sendEvent({
+  const xdm = {
     eventType: 'web.webpagedetails.pageViews',
     web: {
       webPageDetails: {
@@ -101,7 +116,10 @@ export function trackPageView() {
         },
       },
     },
-  });
+  };
+
+  log('📄 pageView', { pageName, path, xdm });
+  sendEvent(xdm);
 }
 
 // ─── Product Detail View ───────────────────────────────────────────────────────
@@ -111,13 +129,16 @@ export function trackPageView() {
  * @param {{ id: string, name: string, price: number, category: string }} product
  */
 export function trackProductView(product) {
-  sendEvent({
+  const xdm = {
     eventType: 'commerce.productViews',
     commerce: {
       productViews: { value: 1 },
     },
     productListItems: [xdmProduct(product)],
-  });
+  };
+
+  log('🛍️  productView', { product, xdm });
+  sendEvent(xdm);
 }
 
 // ─── Product List Impression ──────────────────────────────────────────────────
@@ -129,7 +150,8 @@ export function trackProductView(product) {
  */
 export function trackProductListView(productList, listName) {
   if (!productList.length) return;
-  sendEvent({
+
+  const xdm = {
     eventType: 'commerce.productListViews',
     commerce: {
       productListViews: { value: 1 },
@@ -138,7 +160,10 @@ export function trackProductListView(productList, listName) {
       ...xdmProduct(p),
       productListItemsType: listName,
     })),
-  });
+  };
+
+  log('👁️  productListView', { listName, count: productList.length, products: productList.map((p) => p.name), xdm });
+  sendEvent(xdm);
 }
 
 // ─── Product Click ────────────────────────────────────────────────────────────
@@ -149,7 +174,7 @@ export function trackProductListView(productList, listName) {
  * @param {string} listName  e.g. "home-featured", "category-women"
  */
 export function trackProductClick(product, listName) {
-  sendEvent({
+  const xdm = {
     eventType: 'commerce.productListClicks',
     commerce: {
       productListClicks: { value: 1 },
@@ -158,7 +183,10 @@ export function trackProductClick(product, listName) {
       ...xdmProduct(product),
       productListItemsType: listName,
     }],
-  });
+  };
+
+  log('🖱️  productClick', { product: product.name, listName, xdm });
+  sendEvent(xdm);
 }
 
 // ─── Add to Cart ──────────────────────────────────────────────────────────────
@@ -169,7 +197,7 @@ export function trackProductClick(product, listName) {
  * @param {{ size: string, color: string, qty: number }} options
  */
 export function trackAddToCart(product, options) {
-  sendEvent({
+  const xdm = {
     eventType: 'commerce.productListAdds',
     commerce: {
       productListAdds: { value: 1 },
@@ -181,7 +209,10 @@ export function trackAddToCart(product, options) {
         { attribute: 'color', value: options.color },
       ],
     }],
-  });
+  };
+
+  log('🛒 addToCart', { product: product.name, ...options, xdm });
+  sendEvent(xdm);
 }
 
 // ─── Cart View ────────────────────────────────────────────────────────────────
@@ -192,16 +223,21 @@ export function trackAddToCart(product, options) {
  */
 export function trackCartView(cartLines) {
   if (!cartLines.length) return;
-  sendEvent({
+
+  const total = cartLines.reduce((s, l) => s + l.product.price * l.qty, 0);
+  const xdm = {
     eventType: 'commerce.backOfficeCreditMemoItems',
     commerce: {
       order: {
-        priceTotal: cartLines.reduce((s, l) => s + l.product.price * l.qty, 0),
+        priceTotal: total,
         currencyCode: 'USD',
       },
     },
     productListItems: cartLines.map((l) => xdmProduct({ ...l.product, qty: l.qty })),
-  });
+  };
+
+  log('🛍️  cartView', { lines: cartLines.length, total, items: cartLines.map((l) => l.product.name), xdm });
+  sendEvent(xdm);
 }
 
 // ─── Begin Checkout ───────────────────────────────────────────────────────────
@@ -212,7 +248,7 @@ export function trackCartView(cartLines) {
  * @param {number} total
  */
 export function trackBeginCheckout(cartLines, total) {
-  sendEvent({
+  const xdm = {
     eventType: 'commerce.checkouts',
     commerce: {
       checkouts: { value: 1 },
@@ -222,5 +258,8 @@ export function trackBeginCheckout(cartLines, total) {
       },
     },
     productListItems: cartLines.map((l) => xdmProduct({ ...l.product, qty: l.qty })),
-  });
+  };
+
+  log('💳 beginCheckout', { lines: cartLines.length, total, items: cartLines.map((l) => l.product.name), xdm });
+  sendEvent(xdm);
 }
