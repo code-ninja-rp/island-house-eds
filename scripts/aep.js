@@ -156,10 +156,12 @@ export function trackProductListView(productList, listName) {
     commerce: {
       productListViews: { value: 1 },
     },
-    productListItems: productList.map((p) => ({
-      ...xdmProduct(p),
-      productListItemsType: listName,
-    })),
+    productListItems: productList.map((p) => xdmProduct(p)),
+    _experience: {
+      analytics: {
+        customDimensions: { eVars: { eVar6: listName } },
+      },
+    },
   };
 
   log('👁️  productListView', { listName, count: productList.length, products: productList.map((p) => p.name), xdm });
@@ -179,10 +181,12 @@ export function trackProductClick(product, listName) {
     commerce: {
       productListClicks: { value: 1 },
     },
-    productListItems: [{
-      ...xdmProduct(product),
-      productListItemsType: listName,
-    }],
+    productListItems: [xdmProduct(product)],
+    _experience: {
+      analytics: {
+        customDimensions: { eVars: { eVar6: listName } },
+      },
+    },
   };
 
   log('🖱️  productClick', { product: product.name, listName, xdm });
@@ -226,12 +230,10 @@ export function trackCartView(cartLines) {
 
   const total = cartLines.reduce((s, l) => s + l.product.price * l.qty, 0);
   const xdm = {
-    eventType: 'commerce.backOfficeCreditMemoItems',
+    eventType: 'commerce.productListOpens',
     commerce: {
-      order: {
-        priceTotal: total,
-        currencyCode: 'USD',
-      },
+      productListOpens: { value: 1 },
+      cart: { priceTotal: total, currencyCode: 'USD' },
     },
     productListItems: cartLines.map((l) => xdmProduct({ ...l.product, qty: l.qty })),
   };
@@ -331,7 +333,6 @@ export function trackCheckoutStep(step, method) {
     eventType: 'commerce.checkouts',
     commerce: {
       checkouts: { value: 1 },
-      checkout: { value: step },
     },
     _experience: {
       analytics: {
@@ -359,7 +360,7 @@ export function trackOrderComplete(order) {
       order: {
         priceTotal: order.total,
         currencyCode: 'USD',
-        payments: [{ transactionID: order.orderNumber, paymentAmount: order.total }],
+        payments: [{ transactionID: order.orderNumber, paymentAmount: order.total, currencyCode: 'USD', paymentType: 'other' }],
       },
     },
     productListItems: order.items.map((l) => xdmProduct({ ...l.product, qty: l.qty })),
@@ -376,7 +377,7 @@ export function trackOrderComplete(order) {
  */
 export function trackLogout(user) {
   const xdm = {
-    eventType: 'web.webinteraction.click',
+    eventType: 'web.webinteraction.linkClicks',
     web: {
       webInteraction: {
         name: 'logout',
