@@ -30,6 +30,25 @@ const AEP_STYLE  = 'color:#eb1000;font-weight:bold;'; // Adobe red
 // eslint-disable-next-line no-console
 const log = (label, xdm) => console.log(AEP_PREFIX, AEP_STYLE, label, xdm);
 
+// ─── Category memory ──────────────────────────────────────────────────────────
+
+function rememberCategory(category) {
+  if (!category) return;
+  try {
+    sessionStorage.setItem('ih_last_category', category);
+  } catch (e) {
+    // sessionStorage may be unavailable (privacy mode) — fail silently
+  }
+}
+
+function getRememberedCategory() {
+  try {
+    return sessionStorage.getItem('ih_last_category');
+  } catch (e) {
+    return null;
+  }
+}
+
 // ─── Alloy helper ─────────────────────────────────────────────────────────────
 
 /**
@@ -135,6 +154,7 @@ export function trackPageView() {
  * @param {{ id: string, name: string, price: number, category: string }} product
  */
 export function trackProductView(product) {
+  rememberCategory(product.category);
   const xdm = {
     eventType: 'commerce.productViews',
     commerce: {
@@ -182,6 +202,7 @@ export function trackProductListView(productList, listName) {
  * @param {string} listName  e.g. "home-featured", "category-women"
  */
 export function trackProductClick(product, listName) {
+  rememberCategory(product.category);
   const xdm = {
     eventType: 'commerce.productListClicks',
     commerce: {
@@ -393,9 +414,20 @@ export function trackOrderComplete(order) {
 export async function fetchHomeHeroPersonalization() {
   try {
     const alloy = await waitForAlloy();
+    const lastCategory = getRememberedCategory();
+    const xdmExtra = lastCategory ? {
+      productListItems: [{
+        productCategories: [{
+          categoryID: lastCategory,
+          categoryName: lastCategory.charAt(0).toUpperCase() + lastCategory.slice(1),
+          categoryPath: `/${lastCategory}`,
+        }],
+      }],
+    } : {};
     const result = await alloy('sendEvent', {
       renderDecisions: true,
       personalization: { decisionScopes: ['homepage-hero'] },
+      xdm: xdmExtra,
     });
 
     const proposition = (result?.propositions || []).find(
