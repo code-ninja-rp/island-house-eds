@@ -133,9 +133,13 @@ export default function init(block) {
   const media = document.createElement('div');
   media.className = 'hero-media';
   if (picture) {
+    // Inline styles ensure the picture fills the container even before hero.css
+    // is parsed — critical in the UE author canvas where CSS may arrive late.
+    picture.style.cssText = 'position:absolute;inset:0;display:block;';
     picture.querySelectorAll('img').forEach((img) => {
       img.className = 'hero-img';
       img.loading = 'eager';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
     });
     media.append(picture);
   }
