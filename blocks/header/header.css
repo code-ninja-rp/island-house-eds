@@ -93,15 +93,11 @@
 
 .header-icon-btn:hover { color: var(--coral); }
 
-/* Account area — hidden on small screens; reveals at 640 px */
+/* Account area — visible on all screen sizes */
 .header-account-area {
-  display: none;
+  display: flex;
   position: relative;
   align-items: center;
-}
-
-@media (min-width: 640px) {
-  .header-account-area { display: flex; }
 }
 
 /* When JS swaps the auth state these toggle visibility */
