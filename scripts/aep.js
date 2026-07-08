@@ -77,7 +77,11 @@ function xdmProduct(p) {
   return {
     SKU: p.id,
     name: p.name,
-    category: p.category || '',
+    productCategories: p.category ? [{
+      categoryID: p.category,
+      categoryName: p.category.charAt(0).toUpperCase() + p.category.slice(1),
+      categoryPath: `/${p.category}`,
+    }] : [],
     priceTotal: p.price * (p.qty || 1),
     quantity: p.qty || 1,
     currencyCode: 'USD',
