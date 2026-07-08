@@ -276,7 +276,7 @@ export function trackLoginAttempt(email) {
     web: {
       webInteraction: {
         name: 'login-attempt',
-        type: 'form',
+        type: 'other',
         linkClicks: { value: 1 },
       },
     },
@@ -301,7 +301,7 @@ export function trackLoginSuccess(user) {
     web: {
       webInteraction: {
         name: 'login-success',
-        type: 'form',
+        type: 'other',
         linkClicks: { value: 1 },
       },
     },
