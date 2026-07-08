@@ -52,12 +52,6 @@ function buildHeader(block) {
           ${NAV.slice(3).map((n) => `<a href="${n.href}" class="header-nav-link">${n.label}</a>`).join('')}
         </nav>
 
-        <button class="header-icon-btn" aria-label="Search" id="header-search-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-        </button>
-
         <!--
           Account area — contains two mutually exclusive children:
           1. #header-account-btn  → shown when logged OUT  (account icon → /login.html)
