@@ -33,38 +33,39 @@ const log = (label, xdm) => console.log(AEP_PREFIX, AEP_STYLE, label, xdm);
 // ─── Alloy helper ─────────────────────────────────────────────────────────────
 
 /**
- * Wait for the Alloy Web SDK to be ready then send an event.
- * Alloy is loaded async by the Launch library — poll with backoff.
- * @param {Object} xdm  XDM-structured payload
- * @param {Object} [data] Free-form data object (for data elements)
+ * Resolves with window.alloy once the Launch library has initialised it,
+ * or rejects after 5 s. Shared by sendEvent() and fetchHomeHeroPersonalization().
+ * @returns {Promise<Function>}
  */
-function sendEvent(xdm, data = {}) {
-  const dispatch = () => {
-    if (typeof window.alloy === 'function') {
-      window.alloy('sendEvent', { xdm, data }).catch((err) => {
-        // eslint-disable-next-line no-console
-        console.warn('[AEP] sendEvent failed:', err);
-      });
-    }
-  };
-
-  if (typeof window.alloy === 'function') {
-    dispatch();
-  } else {
-    // Alloy may still be loading — wait up to 5 s
+function waitForAlloy() {
+  return new Promise((resolve, reject) => {
+    if (typeof window.alloy === 'function') { resolve(window.alloy); return; }
     let tries = 0;
     const iv = setInterval(() => {
       tries += 1;
       if (typeof window.alloy === 'function') {
         clearInterval(iv);
-        dispatch();
+        resolve(window.alloy);
       } else if (tries > 50) {
         clearInterval(iv);
-        // eslint-disable-next-line no-console
-        console.warn('[AEP] alloy not available after 5 s — event dropped:', xdm);
+        reject(new Error('[AEP] alloy not available after 5 s'));
       }
     }, 100);
-  }
+  });
+}
+
+/**
+ * Wait for the Alloy Web SDK to be ready then send an event.
+ * @param {Object} xdm  XDM-structured payload
+ * @param {Object} [data] Free-form data object (for data elements)
+ */
+function sendEvent(xdm, data = {}) {
+  waitForAlloy()
+    .then((alloy) => alloy('sendEvent', { xdm, data }))
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('[AEP] sendEvent failed:', err);
+    });
 }
 
 // ─── XDM builders ─────────────────────────────────────────────────────────────
@@ -372,6 +373,72 @@ export function trackOrderComplete(order) {
   };
   log('🎉 orderComplete', { orderNumber: order.orderNumber, total: order.total, xdm });
   sendEvent(xdm);
+}
+
+// ─── Personalization ──────────────────────────────────────────────────────────
+
+/**
+ * Request homepage hero personalization from AEP Decisioning.
+ *
+ * Calls Alloy with the "homepage-hero" decision scope, extracts the first
+ * JSON content item from the returned proposition, and returns the parsed
+ * payload. The raw proposition is attached as `.__proposition` so the
+ * caller can pass the object directly to trackHeroPropositionDisplayed().
+ *
+ * Returns null (never throws) if Alloy is unavailable, no proposition is
+ * returned, or JSON parsing fails — callers treat null as "use fallback."
+ *
+ * @returns {Promise<{headline:string,subcopy:string,image:string,ctaLabel:string,ctaHref:string}|null>}
+ */
+export async function fetchHomeHeroPersonalization() {
+  try {
+    const alloy = await waitForAlloy();
+    const result = await alloy('sendEvent', {
+      renderDecisions: true,
+      personalization: { decisionScopes: ['homepage-hero'] },
+    });
+
+    const proposition = (result?.propositions || []).find(
+      (p) => p.scope === 'homepage-hero',
+    );
+    if (!proposition) return null;
+
+    const item = (proposition.items || []).find(
+      (i) => i.schema === 'https://ns.adobe.com/personalization/json-content-item',
+    );
+    if (!item?.data?.content) return null;
+
+    const payload = typeof item.data.content === 'string'
+      ? JSON.parse(item.data.content)
+      : item.data.content;
+
+    payload.__proposition = proposition;
+    log('🎯 heroPersonalization received', { scope: proposition.scope, payload });
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Report a proposition display impression back to AEP Decisioning so the
+ * decision reports the render. Pass the object returned by
+ * fetchHomeHeroPersonalization() — it carries .__proposition internally.
+ * @param {{ __proposition: object }} payload
+ */
+export function trackHeroPropositionDisplayed(payload) {
+  const prop = payload?.__proposition;
+  if (!prop) return;
+  sendEvent({
+    eventType: 'decisioning.propositionDisplay',
+    _experience: {
+      decisioning: {
+        propositions: [{ id: prop.id, scope: prop.scope, scopeDetails: prop.scopeDetails }],
+        propositionEventType: { display: 1 },
+      },
+    },
+  });
+  log('🎯 heroPropositionDisplayed', { scope: prop.scope, id: prop.id });
 }
 
 // ─── Logout ───────────────────────────────────────────────────────────────────

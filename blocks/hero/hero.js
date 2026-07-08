@@ -30,6 +30,7 @@
 
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { fetchHomeHeroPersonalization, trackHeroPropositionDisplayed } from '../../scripts/aep.js';
 
 /** Fallback content used when there is no AEM-delivered DOM content. */
 const FALLBACK = {
@@ -196,4 +197,27 @@ export default function init(block) {
   aepSlot.className = 'aep-slot';
   aepSlot.setAttribute('aria-hidden', 'true');
   block.append(aepSlot);
+
+  // ── AEP Personalization (progressive enhancement) ──────────────────────────
+  // Runs after fallback content is already visible — never blocks render.
+  fetchHomeHeroPersonalization().then((proposition) => {
+    if (!proposition) return;
+    try {
+      const headlineEl = block.querySelector('.hero-headline');
+      const subEl = block.querySelector('.hero-sub');
+      const imgEl = block.querySelector('.hero-img');
+      const ctaEl = block.querySelector('.hero-ctas a');
+
+      if (headlineEl && proposition.headline) headlineEl.innerHTML = proposition.headline;
+      if (subEl && proposition.subcopy) subEl.innerHTML = proposition.subcopy;
+      if (imgEl && proposition.image) imgEl.src = proposition.image;
+      if (ctaEl) {
+        if (proposition.ctaHref) ctaEl.href = proposition.ctaHref;
+        if (proposition.ctaLabel) ctaEl.textContent = proposition.ctaLabel;
+      }
+      trackHeroPropositionDisplayed(proposition);
+    } catch {
+      // never break page render
+    }
+  }).catch(() => {});
 }
