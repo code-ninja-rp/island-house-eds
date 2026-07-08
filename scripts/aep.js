@@ -77,6 +77,7 @@ function xdmProduct(p) {
   return {
     SKU: p.id,
     name: p.name,
+    category: p.category || '',
     priceTotal: p.price * (p.qty || 1),
     quantity: p.qty || 1,
     currencyCode: 'USD',
